@@ -16,12 +16,12 @@ auth_data = {
 }
 
 id1 = 13575261
-#Работа со статусами и получение токена
-print("?".join((AUTH_SERVER, urlencode(auth_data))))
+id2 = 171691064
+#получение токена
+#print("?".join((AUTH_SERVER, urlencode(auth_data))))
 #TOKEN = "203d08492f2160e55c9af9a7587fec06666678eefe35ad258ac0e82b1cb64fe8de3e5aaa8b4c6528cb178"
 TOKEN = "99fb9a4f034dc329f4d86efb6bfdae66452be73b4bdecc6ebf8449796ef73370dc165de4640f64618bebd"
-status = requests.get("https://api.vk.com/method/status.get", params=dict(access_token=TOKEN, v=5.80))
-print(status.text)
+
 
 #запрашиваем список друзей
 def get_VKfriends_by_id(VK_token):
@@ -44,35 +44,35 @@ def get_friends_in_group(VK_token, group):
     print(f"В группе {group} обнаружилось {users_in_group.json()['response']['count']} друзей")
     return users_in_group.json()['response']['count']
 
-friends_total = get_VKfriends_by_id(TOKEN)
-groups_total = get_VKgroups_by_id(TOKEN)
+if __name__ == '__main__':
+    friends_total = get_VKfriends_by_id(TOKEN)
+    groups_total = get_VKgroups_by_id(TOKEN)
 
-result = list()
-result_json = list()
+    result = list()
+    result_json = list()
 
-for group_id in groups_total:
-    print(group_id)
-    if not get_friends_in_group(TOKEN, group_id):
-        print(f"Группа {group_id} нам подходит")
-        result.append(group_id)
-    sleep(0.28)
+    for group_id in groups_total:
+        if not get_friends_in_group(TOKEN, group_id):
+            print(f"Группа {group_id} нам подходит \n")
+            result.append(group_id)
+        sleep(0.28)
 
-print(result)
+    print(result)
 
-for i in result:
-    tmp_dict = dict()
-    response = requests.get("https://api.vk.com/method/groups.getById",
+    for i in result:
+        tmp_dict = dict()
+        response = requests.get("https://api.vk.com/method/groups.getById",
                         params=dict(access_token=TOKEN, v=5.80, group_id=i, fields="description,members_count"))
-    print(response.json())
-    tmp_dict["name"] = response.json()['response'][0]['name']
-    tmp_dict["gid"] = response.json()['response'][0]['id']
-    tmp_dict["members_count"] = response.json()['response'][0]['members_count']
-    print(tmp_dict)
-    result_json.append(tmp_dict)
+        print(response.json())
+        tmp_dict["name"] = response.json()['response'][0]['name']
+        tmp_dict["gid"] = response.json()['response'][0]['id']
+        tmp_dict["members_count"] = response.json()['response'][0]['members_count']
+        print(tmp_dict)
+        result_json.append(tmp_dict)
 
-print(result_json)
+    print(result_json)
 
-with open('groups.json', 'w') as outfile:
-    json.dump(result_json, outfile)
+    with open('groups.json', 'w', encoding="utf-8") as outfile:
+        json.dump(result_json, outfile)
 
 

@@ -51,8 +51,8 @@ def get_friend_in_group2(VK_token, group, user_ids):
     print(response['response'])
     return
 
-list_friends = get_VKfriends_by_id(main.TOKEN, 13575261)
-set_goups = set(get_VKgroups_by_id(main.TOKEN, 13575261))
+list_friends = get_VKfriends_by_id(main.TOKEN, 171691064)
+set_goups = set(get_VKgroups_by_id(main.TOKEN, 171691064))
 
 #print(list_friends)
 #print(set_goups)
